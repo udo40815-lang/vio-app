@@ -3,6 +3,7 @@ import { Search as SearchIcon, Loader2 } from 'lucide-react';
 import { V } from '../utils/design-system.js';
 import Avatar from '../components/ui/Avatar.jsx';
 import { searchProfiles } from '../lib/profile.js';
+import { setViewProfile } from '../store/index.js';
 
 function SearchScreen({ ui, setTab }) {
   const [query, setQuery] = useState('');
@@ -20,6 +21,24 @@ function SearchScreen({ ui, setTab }) {
     setLoading(false);
   }, []);
 
+  const handleViewProfile = (profile) => {
+    setViewProfile({
+      id: profile.id,
+      handle: profile.handle,
+      displayName: profile.display_name || profile.handle,
+      avatarUrl: profile.avatar_url || '',
+      coverUrl: profile.cover_url || '',
+      bio: profile.bio || '',
+      website: profile.website || '',
+      location: profile.location || '',
+      joined: profile.created_at || '',
+      followersCount: profile.followers_count || 0,
+      followingCount: profile.following_count || 0,
+      reputation: profile.reputation || 0,
+    });
+    setTab('profile');
+  };
+
   return (
     <div className="px-4 pt-2 space-y-4">
       <div className="relative">
@@ -29,7 +48,7 @@ function SearchScreen({ ui, setTab }) {
       {loading && <div className="flex justify-center py-8"><Loader2 size={20} className="animate-spin" style={{ color: ui.textMuted }} /></div>}
       {!loading && searched && results.length === 0 && <p className="text-center py-8 text-[14px]" style={{ color: ui.textMuted }}>No creators found.</p>}
       {results.map(profile => (
-        <button key={profile.id} onClick={() => {}} className="w-full flex items-center gap-3 rounded-2xl p-3 transition-all hover:-translate-y-[1px]" style={{ background: ui.dark ? 'rgba(255,255,255,0.03)' : '#FFFFFF', border: `1px solid ${ui.border}` }}>
+        <button key={profile.id} onClick={() => handleViewProfile(profile)} className="w-full flex items-center gap-3 rounded-2xl p-3 transition-all hover:-translate-y-[1px]" style={{ background: ui.dark ? 'rgba(255,255,255,0.03)' : '#FFFFFF', border: `1px solid ${ui.border}` }}>
           <Avatar handle={profile.handle} name={profile.display_name} size={40} url={profile.avatar_url} />
           <div className="flex-1 text-left"><div className="text-[14px] font-semibold" style={{ color: ui.textPrimary }}>{profile.display_name || profile.handle}</div><div className="text-[12px]" style={{ color: ui.textMuted }}>@{profile.handle}</div></div>
         </button>

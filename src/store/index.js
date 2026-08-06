@@ -1,2 +1,2 @@
 export { default as useVioStore, useVioStore as default } from './store.js';
-export { initSession, setSession, doSignUp, doSignIn, doSignOut, doCreatePost, doAddComment, doDeleteComment } from './store.js';
+export { initSession, setSession, doSignUp, doSignIn, doSignOut, doCreatePost, doAddComment, doDeleteComment, setViewProfile, clearViewProfile } from './store.js';

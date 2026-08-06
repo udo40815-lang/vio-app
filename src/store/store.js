@@ -18,7 +18,29 @@ export const useVioStore = create((set, get) => ({
   earned: 0,
   spent: 0,
   balance: 0,
+  viewProfile: null,
+  viewProfileLoading: false,
+  viewPosts: [],
 }));
+
+export async function setViewProfile(profile) {
+  useVioStore.setState(s => ({ ...s, viewProfile: profile, viewProfileLoading: true, viewPosts: [] }));
+  if (profile?.id) {
+    try {
+      const { posts } = await getPosts(50, 0);
+      const userPosts = (posts || []).filter(p => p.user_id === profile.id);
+      useVioStore.setState(s => ({ ...s, viewPosts: userPosts, viewProfileLoading: false }));
+    } catch (e) {
+      useVioStore.setState(s => ({ ...s, viewProfileLoading: false }));
+    }
+  } else {
+    useVioStore.setState(s => ({ ...s, viewProfileLoading: false }));
+  }
+}
+
+export function clearViewProfile() {
+  useVioStore.setState(s => ({ ...s, viewProfile: null, viewPosts: [] }));
+}
 
 export async function initSession() {
   try {
